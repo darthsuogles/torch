@@ -1,6 +1,3 @@
-[submodule "exe/luajit-rocks"]
-	path = exe/luajit-rocks
-	url = https://github.com/torch/luajit-rocks.git
 [submodule "exe/qtlua"]
 	path = exe/qtlua
 	url = https://github.com/torch/qtlua.git

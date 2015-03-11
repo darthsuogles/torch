@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+# Setup the parameters
+module load gcc/4.8.2-mkl
+module load cuda/5.5.22
+module load openblas readline ncurses zmq
+export CC=gcc
+export CXX=g++
+
 THIS_DIR=$(cd $(dirname $0); pwd)
 PREFIX="${THIS_DIR}/install"
 BATCH_INSTALL=0
@@ -30,11 +37,16 @@ fi
 
 echo "Prefix set to $PREFIX"
 
-if [[ `uname` == 'Linux' ]]; then
-    export CMAKE_LIBRARY_PATH=/opt/OpenBLAS/include:/opt/OpenBLAS/lib:$CMAKE_LIBRARY_PATH
-fi
+# if [[ `uname` == 'Linux' ]]; then
+#     export CMAKE_LIBRARY_PATH=/opt/OpenBLAS/include:/opt/OpenBLAS/lib:$CMAKE_LIBRARY_PATH
+# fi
 
 git submodule update --init --recursive
+if [ ! -L $PWD/exe/luajit-rocks ]; then
+    echo "Remove the $PWD/exe/luajit-rocks and use our own build"
+    #rm -fr $PWD/exe/luajit-rocks
+    #ln -s $PWD/../luajit-rocks $PWD/exe/.
+fi
 
 # If we're on OS X, use clang
 if [[ `uname` == "Darwin" ]]; then
@@ -46,7 +58,7 @@ fi
 
 mkdir -p build
 cd build
-cmake .. -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_BUILD_TYPE=Release -DWITH_LUAJIT21=ON
+cmake .. -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_BUILD_TYPE=Release -DWITH_LUAJIT21=ON 
 make && make install
 cd ..
 
