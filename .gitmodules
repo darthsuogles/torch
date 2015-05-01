@@ -85,3 +85,6 @@
 [submodule "extra/iTorch"]
 	path = extra/iTorch
 	url = https://github.com/facebook/iTorch.git
+[submodule "exe/luajit-rocks"]
+	path = exe/luajit-rocks
+	url = https://github.com/darthsuogles/luajit-rocks.git

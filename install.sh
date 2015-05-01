@@ -14,11 +14,11 @@ BATCH_INSTALL=0
 while getopts 'bh:' x; do
     case "$x" in
         h) 
-            echo "usage: $0
-This script will install Torch and related, useful packages into $PREFIX.
-
-    -b      Run without requesting any user input (will automatically add PATH to shell profile)
-"
+            echo "usage: $0"
+	    echo 
+	    echo "This script will install Torch and related, useful packages into $PREFIX."
+	    echo 
+	    echo "    -b      Run without requesting any user input (will automatically add PATH to shell profile)"
             exit 2
             ;;
         b)

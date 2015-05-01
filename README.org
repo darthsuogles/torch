@@ -1,5 +1,4 @@
-Self-contained Torch installation
-============
+#+TITLE: Self-contained Torch installation
 
 To keep updated with the latest upstream, please use run =update.sh= followed by =install.sh=.
 We keep a modified =luajit-rocks= repository.
