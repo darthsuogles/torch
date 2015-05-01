@@ -4,7 +4,7 @@ pkg=torch
 ver=7-dev
 install_dir=$PWD/install
 
-source $HOME/local/src/gen_modules.sh
+source $PWD/scripts/gen_modules.sh
 
 print_header $pkg $ver
 print_modline "prepend-path PATH $install_dir/bin"

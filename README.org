@@ -1,0 +1,41 @@
+Self-contained Torch installation
+============
+
+To keep updated with the latest upstream, please use run =update.sh= followed by =install.sh=.
+We keep a modified =luajit-rocks= repository.
+
+If you use the excellent =modules= management package, please run =gen_modules_torch.sh=.
+It will generate a module file and put it under your local =MODULEPATH=.
+
+To install any torch packages, call
+#+begin_src sh 
+luarocks install <package_name>
+#+end_src
+
+* First Time Installation
+Install dependencies. Uses `apt-get` on Ubuntu, which might require `sudo`. Uses `brew` on OSX.
+#+begin_src sh 
+curl -sk https://raw.githubusercontent.com/torch/ezinstall/master/install-deps | bash
+#+end_src
+
+Install this repo, which installs the torch distribution, with a lot of nice goodies.
+#+begin_src sh 
+git clone https://github.com/torch/distro.git ~/torch --recursive
+cd ~/torch; ./install.sh
+#+end_src
+
+Now, everything should be installed. Source your profile, or open a new shell
+#+begin_src sh 
+source ~/.bashrc  # or ~/.zshrc.
+th -e "print 'I just installed Torch! Yesss.'"
+#+end_src
+
+Note: If you use a non-standard shell, you'll want to add the following directories to your `PATH`
+#+begin_src sh 
+export PATH=$HOME/torch/install/bin:$PATH
+export LD_LIBRARY_PATH=$HOME/torch/install/lib:$LD_LIBRARY_PATH
+export DYLD_LIBRARY_PATH=$HOME/torch/install/lib:$DYLD_LIBRARY_PATH
+#+end_src
+
+Tested on Ubuntu 14.04, CentOS/RHEL 6.3 and OSX
+Tested on RHEL 5 (University of Maryland Chimera Compute Cluster) with gcc 4.8.2
