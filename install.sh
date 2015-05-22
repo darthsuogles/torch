@@ -37,7 +37,7 @@ fi
 
 echo "Prefix set to $PREFIX"
 
-git submodule update --init --recursive
+#git submodule update --init --recursive
 if [ ! -L $PWD/exe/luajit-rocks ]; then
     echo "Remove the $PWD/exe/luajit-rocks and use our own build"
     rm -fr $PWD/exe/luajit-rocks
