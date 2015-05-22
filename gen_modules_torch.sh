@@ -1,8 +1,13 @@
 #!/bin/bash
 
 pkg=torch
-ver=7-dev
-install_dir=$PWD/install
+#ver=7-dev
+ver=7-stable
+if [ "$ver" == "7-dev" ]; then
+    install_dir=$PWD/install
+else
+    install_dir=$PWD/install-stable
+fi
 
 source $PWD/scripts/gen_modules.sh
 

@@ -37,15 +37,11 @@ fi
 
 echo "Prefix set to $PREFIX"
 
-# if [[ `uname` == 'Linux' ]]; then
-#     export CMAKE_LIBRARY_PATH=/opt/OpenBLAS/include:/opt/OpenBLAS/lib:$CMAKE_LIBRARY_PATH
-# fi
-
 git submodule update --init --recursive
 if [ ! -L $PWD/exe/luajit-rocks ]; then
     echo "Remove the $PWD/exe/luajit-rocks and use our own build"
-    #rm -fr $PWD/exe/luajit-rocks
-    #ln -s $PWD/../luajit-rocks $PWD/exe/.
+    rm -fr $PWD/exe/luajit-rocks
+    ln -s $PWD/../luajit-rocks $PWD/exe/.
 fi
 
 # If we're on OS X, use clang
@@ -68,9 +64,8 @@ path_to_nvidiasmi=$(which nvidia-smi)
 
 # check if we are on mac and fix RPATH for local install
 path_to_install_name_tool=$(which install_name_tool)
-if [ -x "$path_to_install_name_tool" ]
-then
-   install_name_tool -id ${PREFIX}/lib/libluajit.dylib ${PREFIX}/lib/libluajit.dylib
+if [ -x "$path_to_install_name_tool" ]; then
+    install_name_tool -id ${PREFIX}/lib/libluajit.dylib ${PREFIX}/lib/libluajit.dylib
 fi
 
 $PREFIX/bin/luarocks install luafilesystem
@@ -96,7 +91,8 @@ then
     cd ${THIS_DIR}/extra/cutorch && $PREFIX/bin/luarocks make rocks/cutorch-scm-1.rockspec
     cd ${THIS_DIR}/extra/cunn && $PREFIX/bin/luarocks make rocks/cunn-scm-1.rockspec
     cd ${THIS_DIR}/extra/cunnx && $PREFIX/bin/luarocks make rocks/cunnx-scm-1.rockspec
-    cd ${THIS_DIR}/extra/cudnn && $PREFIX/bin/luarocks make cudnn-scm-1.rockspec
+    echo "Ignore cuDNN for the moment"
+#    cd ${THIS_DIR}/extra/cudnn && $PREFIX/bin/luarocks make cudnn-scm-1.rockspec
 fi
 
 cd ${THIS_DIR}/pkg/qttorch && $PREFIX/bin/luarocks make rocks/qttorch-scm-1.rockspec
@@ -112,77 +108,3 @@ cd ${THIS_DIR}/extra/signal && $PREFIX/bin/luarocks make rocks/signal-scm-1.rock
 
 export PATH=$OLDPATH # Restore anaconda distribution if we took it out.
 cd ${THIS_DIR}/extra/iTorch && $PREFIX/bin/luarocks make
-
-
-RC_FILE=0
-DEFAULT=yes
-if [[ $(echo $SHELL | grep bash) ]]; then
-    RC_FILE=$HOME/.bashrc
-elif [[ $(echo $SHELL | grep zsh) ]]; then
-    RC_FILE=$HOME/.zshrc
-else
-    echo "
-
-Non-standard shell $SHELL detected. You might want to 
-add the following lines to your shell profile:
-
-export PATH=$PREFIX/bin:\$PATH
-export LD_LIBRARY_PATH=$PREFIX/lib:\$LD_LIBRARY_PATH 
-export DYLD_LIBRARY_PATH=$PREFIX/lib:\$DYLD_LIBRARY_PATH 
-"
-fi
-
-WRITE_PATH_TO_PROFILE=0
-if [[ $BATCH_INSTALL == 0 ]]; then
-    if [ -f $RC_FILE ]; then
-        echo "
-
-Do you want to automatically prepend the Torch install location
-to PATH and LD_LIBRARY_PATH in your $RC_FILE? (yes/no)
-[$DEFAULT] >>> "
-        read input
-        if [[ $input == "" ]]; then
-            input=$DEFAULT
-        fi
-
-        is_yes() {
-            yesses={y,Y,yes,Yes,YES}
-            if [[ $yesses =~ $1 ]]; then
-                echo 1
-            fi
-        }
-
-        if [[ $(is_yes $input) ]]; then
-            WRITE_PATH_TO_PROFILE=1
-        fi
-    fi
-else
-    if [[ $RC_FILE ]]; then
-        WRITE_PATH_TO_PROFILE=1
-    fi
-fi
-
-if [[ $WRITE_PATH_TO_PROFILE == 1 ]]; then
-    echo "
-
-export PATH=$PREFIX/bin:\$PATH  # Added automatically by torch-dist
-export LD_LIBRARY_PATH=$PREFIX/lib:\$LD_LIBRARY_PATH  # Added automatically by torch-dist
-export DYLD_LIBRARY_PATH=$PREFIX/lib:\$DYLD_LIBRARY_PATH  # Added automatically by torch-dist" >> $RC_FILE
-    echo "
-
-export PATH=$PREFIX/bin:\$PATH  # Added automatically by torch-dist
-export LD_LIBRARY_PATH=$PREFIX/lib:\$LD_LIBRARY_PATH  # Added automatically by torch-dist
-export DYLD_LIBRARY_PATH=$PREFIX/lib:\$DYLD_LIBRARY_PATH  # Added automatically by torch-dist" >> $HOME/.profile
-
-else
-    echo "
-
-Not updating your shell profile.
-You might want to 
-add the following lines to your shell profile:
-
-export PATH=$PREFIX/bin:\$PATH
-export LD_LIBRARY_PATH=$PREFIX/lib:\$LD_LIBRARY_PATH 
-export DYLD_LIBRARY_PATH=$PREFIX/lib:\$DYLD_LIBRARY_PATH 
-"
-fi
