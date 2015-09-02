@@ -54,7 +54,10 @@ fi
 
 mkdir -p build
 cd build
-cmake .. -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_BUILD_TYPE=Release -DWITH_LUAJIT21=ON 
+cmake \
+    -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_BUILD_TYPE=Release -DWITH_LUAJIT21=ON \
+    -D CMAKE_PREFIX_PATH=$HOME/local \
+    ..
 make && make install
 cd ..
 
